@@ -7,9 +7,14 @@ if (!MONGODB_CS) {
 }
 
 const dbConnect = async () => {
+
+  if (mongoose.connection.readyState === 1) {
+    console.log("Already connected to the database");
+    return;
+  }
   try {
     await mongoose.connect(MONGODB_CS);
-    console.log("connected successfully");
+    console.log("Database connected successfully");
   } catch (error) {
     console.log("error connecting ...", error);
   }
