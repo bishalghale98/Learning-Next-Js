@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 export default function Home() {
+  
   return (
      <div>
       <nav className="fixed w-full top-0 z-50 bg-black/10 backdrop-blur-lg transition-colors duration-300 md:px-10 lg:px-10">
