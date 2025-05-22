@@ -12,7 +12,7 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async signIn({ user }): Promise < boolean > {
+    async signIn({ user }): Promise<boolean> {
       try {
         await dbConnect();
         const existingUser = await User.findOne({ email: user.email });
@@ -25,8 +25,7 @@ const handler = NextAuth({
             googleId: user.id,
           });
         }
-          return true;
-
+        return true;
       } catch (error) {
         console.error("Error in signIn callback:", error);
         return false;

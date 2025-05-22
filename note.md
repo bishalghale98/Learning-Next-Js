@@ -79,8 +79,85 @@ session: {
   strategy: "jwt"
 },
 secret: process.env.NEXTAUTH_SECRET,
+# 📘 Middleware in Next.js – Complete Guide
 
+## 🔍 What is Middleware?
 
+**Middleware** is a function that runs **between a user’s request and your server’s response**. It allows you to:
+
+- Inspect and modify requests
+- Block or redirect users
+- Add headers or cookies
+- Perform background checks (e.g., authentication, logging, rate limiting)
+
+---
+
+## ⚙️ Middleware in Next.js
+
+In **Next.js (13+ App Router)**, middleware lets you run logic before serving a route or API. Common use cases include:
+
+- 🔐 **Authentication & Authorization**
+- 🚦 **Redirections**
+- 📊 **Logging**
+- ⚡ **Rate Limiting**
+- 🌐 **Localization**
+- 🧠 **Modifying Request/Response Headers**
+
+---
+
+## 📁 Folder & File Structure
+
+Place your global middleware in:
+
+```
+src/middleware.ts
+```
+
+To create reusable logic, structure your project like this:
+
+```
+src/
+├── middleware.ts         # Global entry point
+├── middlewares/          # Custom reusable middlewares
+│   ├── auth.ts
+│   ├── logger.ts
+│   ├── rateLimit.ts
+│   └── withMiddleware.ts # Utility to compose multiple middlewares
+```
+
+---
+
+## 🧠 Example: Redirect Unauthenticated Users
+
+```ts
+// src/middleware.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get('token')?.value;
+
+  if (!token && request.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  return NextResponse.next(); // Proceed to route
+}
+
+export const config = {
+  matcher: ['/dashboard/:path*'], // Only run on /dashboard routes
+};
+```
+
+---
+
+### 🔄 Analogy: Middleware as a Security Guard
+
+Think of middleware as a security guard at a building entrance:
+
+- ✅ Checks your ID (auth middleware)
+- 🚫 Stops you if you're not allowed (authorization)
+- 🔁 Redirects guests to the reception (redirect)
+- 📝 Logs your entry (logger)
 
 
 
