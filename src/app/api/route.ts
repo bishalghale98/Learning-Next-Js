@@ -11,7 +11,10 @@ export async function GET() {
     profileImage: "this is image",
   });
 
-  return Response.json({
-    message: "you api hit",
-  });
+  return Response.json(
+    {
+      message: "you api hit",
+    },
+    { status: 200 }
+  );
 }
