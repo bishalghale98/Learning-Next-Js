@@ -61,6 +61,27 @@ Today, I worked on improving the MongoDB connection logic using `mongoose.connec
 CSR and ssr concept
 
 
+# 📚 Revision Notes: Google Authentication + Mongoose Models Setup in Next.js
+
+## ✅ Authentication Setup Using NextAuth (Google OAuth)
+
+- **Library Used**: `NextAuth.js`
+- **Purpose**: Authenticate users via Google login.
+- **Route File**: `app/api/auth/[...nextauth]/route.ts`
+- **Configured Providers**: Google
+  - Requires `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+- **Session Handling**: JWT-based session strategy
+
+### 🔸 Important NextAuth Settings
+
+```ts
+session: {
+  strategy: "jwt"
+},
+secret: process.env.NEXTAUTH_SECRET,
+
+
+
 
 
 
