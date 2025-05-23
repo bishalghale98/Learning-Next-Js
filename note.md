@@ -81,6 +81,9 @@ session: {
 secret: process.env.NEXTAUTH_SECRET,
 # 📘 Middleware in Next.js – Complete Guide
 
+
+
+
 ## 🔍 What is Middleware?
 
 **Middleware** is a function that runs **between a user’s request and your server’s response**. It allows you to:

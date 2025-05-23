@@ -1,14 +1,12 @@
 import mongoose from "mongoose";
-
-
 const Schema = mongoose.Schema;
 
-enum UserRole {
+export enum UserRole {
   STUDENT = "student",
   ADMIN = "admin",
 }
 
-interface IUser extends Document {
+export interface IUser extends Document {
   username: string;
   email: string;
   googleId: string;
@@ -39,10 +37,9 @@ const userSchema = new Schema<IUser>({
   },
   profileImage: {
     type: String,
-    default: '../../../public/default-profile.png',
+    default: "../../../public/default-profile.png",
   },
 });
 
 const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 export default User;
-export type { IUser , UserRole};

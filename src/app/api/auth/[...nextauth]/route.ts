@@ -1,9 +1,14 @@
 import dbConnect from "@/database/connection";
-import User from "@/database/models/user.model";
-import NextAuth from "next-auth";
+import User, { IUser } from "@/database/models/user.model";
+import NextAuth, { AuthOptions, Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth({
+interface ExtendedUser extends IUser {
+  id: string;
+}
+
+export const authOptions: AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -31,7 +36,38 @@ const handler = NextAuth({
         return false;
       }
     },
+    async jwt({
+      token,
+      user,
+    }: {
+      token: JWT;
+      user?: ExtendedUser | any;
+    }): Promise<JWT> {
+      if (user) {
+        token.sub = user.id; // store user ID
+      }
+      return token;
+    },
+    async session({
+      session,
+      token,
+    }: {
+      session: Session;
+      token: JWT;
+    }): Promise<Session> {
+      await dbConnect();
+      const dbUser = await User.findById(token.sub);
+
+      if (session.user && dbUser) {
+        session.user.id = dbUser?._id?.toString();
+        session.user.role = dbUser?.role;
+      }
+
+      return session;
+    },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

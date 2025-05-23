@@ -1,8 +1,16 @@
 import dbConnect from "@/database/connection";
 import Category from "@/database/models/category.model";
+import { NextRequest } from "next/server";
+import { authMiddleware } from "../../../../../middleware/auth.middleware";
 
 export async function POST_Categories(req: Request) {
   try {
+    const response = authMiddleware(req as NextRequest);
+
+    if (response) {
+      return response;
+    }
+
     // database connection
     await dbConnect();
 
