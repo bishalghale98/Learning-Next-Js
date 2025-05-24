@@ -1,5 +1,8 @@
 "use client";
-import { signIn } from "next-auth/react";
+
+import Link from "next/link";
+
+
 
 export default function Home() {
   return (
@@ -24,42 +27,19 @@ export default function Home() {
           </a>
           {/* Desktop Menu Links */}
           <div className="hidden md:flex items-center md:gap-8 text-white">
-            <a
+            <Link
               href="/"
               className="text-sm font-medium hover:text-purple-400 transition"
             >
-              Home
-            </a>
-            <a
-              href="#about"
+              home
+            </Link>
+
+             <Link
+              href="/admin"
               className="text-sm font-medium hover:text-purple-400 transition"
             >
-              About
-            </a>
-            <a
-              href="#services"
-              className="text-sm font-medium hover:text-purple-400 transition"
-            >
-              Services
-            </a>
-            <a
-              href="#portfolio"
-              className="text-sm font-medium hover:text-purple-400 transition"
-            >
-              Portfolio
-            </a>
-            <a
-              href="#contact"
-              className="text-sm font-medium hover:text-purple-400 transition"
-            >
-              Contact
-            </a>
-            <a
-              href="#contact"
-              className="cursor-pointer rounded-full border-2 py-2 px-6 border-white bg-white text-purple-900 hover:bg-purple-900 hover:text-white hover:shadow-lg transition duration-300 ease-in-out"
-            >
-              Contact Now
-            </a>
+              Admin
+            </Link>
           </div>
           {/* Mobile Menu Button */}
           <div className="md:hidden">

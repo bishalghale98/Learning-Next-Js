@@ -26,5 +26,4 @@ const categorySchema = new Schema<ICategory>({
 const Category = mongoose.models.Category || mongoose.model<ICategory>("Category", categorySchema);
 
 export default Category;
-export type { ICategory };
 // This code defines a Mongoose schema and model for a Category entity.
