@@ -1,5 +1,4 @@
 "use client"
-import type { ReactNode } from "react"
 import { redirect } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -17,7 +16,7 @@ import { ArrowLeft, Plus, FileText, Tag } from "lucide-react"
 
 
 
-export default function addCategory(): ReactNode {
+export default function addCategory() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4 py-8">
