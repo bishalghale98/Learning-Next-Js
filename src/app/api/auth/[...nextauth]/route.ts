@@ -6,6 +6,8 @@ import GoogleProvider from "next-auth/providers/google";
 
 interface ExtendedUser extends IUser {
   id: string;
+  _id?: string;
+  dbUserId?: string;
 }
 
 export const authOptions: AuthOptions = {
@@ -17,50 +19,54 @@ export const authOptions: AuthOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    // Runs after successful OAuth login
     async signIn({ user }): Promise<boolean> {
       try {
         await dbConnect();
-        const existingUser = await User.findOne({ email: user.email });
 
-        if (!existingUser) {
-          await User.create({
+        // Check if user exists in MongoDB
+        let dbUser = await User.findOne({ email: user.email });
+
+        // Create user if not exists
+        if (!dbUser) {
+          dbUser = await User.create({
             username: user.name,
             email: user.email,
             profileImage: user.image,
             googleId: user.id,
           });
         }
+
+        // Attach MongoDB user ID to `user` for jwt callback
+        (user as any).dbUserId = dbUser._id.toString();
+
         return true;
       } catch (error) {
         console.error("Error in signIn callback:", error);
         return false;
       }
     },
-    async jwt({
-      token,
-      user,
-    }: {
-      token: JWT;
-      user?: ExtendedUser | any;
-    }): Promise<JWT> {
+
+    // Runs when JWT token is created or updated
+    async jwt({ token, user }): Promise<JWT> {
+      // First time user logs in
       if (user) {
-        token.sub = user.id; // store user ID
+        // Store MongoDB _id in token.sub
+        token.sub = (user as any).dbUserId || user.id;
       }
       return token;
     },
-    async session({
-      session,
-      token,
-    }: {
-      session: Session;
-      token: JWT;
-    }): Promise<Session> {
+
+    // Runs whenever session is checked/created
+    async session({ session, token }): Promise<Session> {
       await dbConnect();
+
+      // Find user by MongoDB _id stored in token.sub
       const dbUser = await User.findById(token.sub);
 
       if (session.user && dbUser) {
-        session.user.id = dbUser?._id?.toString();
-        session.user.role = dbUser?.role;
+        session.user.id = dbUser._id.toString();
+        session.user.role = dbUser.role;
       }
 
       return session;

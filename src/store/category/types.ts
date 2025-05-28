@@ -11,11 +11,18 @@ interface IMeta {
   requestStatus: string;
 }
 
+interface ICategoryError {
+  message: string | null;
+  statusCode: number | null;
+}
+
 interface ICategoryInitialState {
   categories: ICategory[];
   loading: boolean;
-  success: boolean;
-  error: string | null;
+  successCreate: boolean;
+  error: ICategoryError;
   meta: IMeta;
+  hasFetched: boolean;
+  addCategories: string | null; // to store newly added category
 }
 export type { ICategoryInitialState };

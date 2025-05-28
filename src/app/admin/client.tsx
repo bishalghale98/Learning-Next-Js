@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -23,9 +25,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 const Client = () => {
- 
+
+  const { categories } = useAppSelector((state) => state.category);
+
+  const totalCategories = categories.length || 0;
 
   return (
     <div className="space-y-6 pt-6">
@@ -84,10 +90,8 @@ const Client = () => {
             <BarChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-xs text-muted-foreground">
-              loading
-            </p>
+            <div className="text-2xl font-bold">{totalCategories}</div>
+            <p className="text-xs text-muted-foreground">Total Categories</p>
           </CardContent>
         </Card>
       </div>

@@ -18,26 +18,15 @@ const initialState: IPaymentInitialState = {
 const paymentSlice = createSlice({
   name: "payment",
   initialState,
-  reducers: {
-    fetchPaymentsStart(state) {
+  reducers: {},
+  extraReducers: (builder)=>{
+    builder.addCase("payment/getPayments/pending", (state) => {
       state.loading = true;
       state.success = false;
       state.error = null;
-    },
-    fetchPaymentsSuccess(state, action) {
-      state.loading = false;
-      state.success = true;
-      state.payments = action.payload;
-      state.error = null;
-    },
-    fetchPaymentsFailure(state, action) {
-      state.loading = false;
-      state.success = false;
-      state.error = action.payload;
-    },
-  },
+    })
+  }
 });
 
-const { fetchPaymentsStart, fetchPaymentsSuccess, fetchPaymentsFailure } =
-  paymentSlice.actions;
+
 export default paymentSlice.reducer;

@@ -6,6 +6,7 @@ import SessionWrapper from "@/components/SessionWrapper";
 import ReduxWrapper from "@/components/ReduxWrapper";
 import ReduxPersistWrapper from "../components/ReduxPersistWrapper";
 import { Toaster } from "sonner";
+import StoreProvider from "@/components/StoreProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,14 +33,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReduxWrapper>
+        <StoreProvider>
           <ReduxPersistWrapper>
             <SessionWrapper>
               <Toaster position="top-right" richColors />
               {children}
             </SessionWrapper>
           </ReduxPersistWrapper>
-        </ReduxWrapper>
+        </StoreProvider>
       </body>
     </html>
   );

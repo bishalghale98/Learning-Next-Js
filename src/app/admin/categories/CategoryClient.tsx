@@ -8,34 +8,35 @@ import { getAllCategories } from "@/store/category/categoryAction";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Search } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import CategoryTable from "./CategoryTable";
 import { toast } from "sonner";
-import { categoryActions } from "@/store/category/categorySlice";
 
 const CategoryClient = () => {
   const dispatch = useAppDispatch();
-  const { categories, loading, error, success, meta } = useAppSelector(
-    (state) => state.category
-  );
+  const { categories, loading, error, meta, hasFetched } =
+    useAppSelector((state) => state.category);
+
+  // Ref to ensure getAllCategories dispatch runs only once
 
   useEffect(() => {
-    dispatch(getAllCategories());
+    if (!hasFetched) {
+      dispatch(getAllCategories());
+      console.log("Fetch categories");
+    }
   }, [dispatch]);
 
   useEffect(() => {
-    if (error) {
-      toast.error("Failed to load categories. Please try again later.");
-      dispatch(categoryActions.resetCategoryState()); // reset error state
+    if (error && error.message) {
+      toast.error(error.message);
     }
   }, [error]);
 
   useEffect(() => {
-    if (success) {
+    if (hasFetched) {
       toast.success("Categories loaded successfully!");
-      dispatch(categoryActions.resetCategoryState()); // reset success flag
     }
-  }, [success]);
+  }, [hasFetched]);
 
   if (loading) {
     return (
@@ -45,8 +46,7 @@ const CategoryClient = () => {
     );
   }
 
-
-  const addCategoryRoute = "/admin/categories/addcategory";
+  const addCategoryRoute = "/admin/categories/add-category";
 
   return (
     <div className="flex flex-col px-2 sm:px-4 md:px-6 lg:px-8 py-4">

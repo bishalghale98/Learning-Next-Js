@@ -3,58 +3,50 @@ import Category from "@/database/models/category.model";
 import { NextRequest } from "next/server";
 import { authMiddleware } from "../../../../../middleware/auth.middleware";
 
-export async function POST_Categories(req: Request) {
+export async function POST_Categories(req: NextRequest) {
   try {
-    const response = authMiddleware(req as NextRequest);
+    // AUTH CHECK
+    const authResponse = await authMiddleware(req as NextRequest);
+    if (authResponse) return authResponse; // return if not authorized
 
-    if (response) {
-      return response;
-    }
-
-    // database connection
+    // Connect to DB
     await dbConnect();
 
-    const { name, description } = await req.json();
+    // Get request body
+    const body = await req.json();
+    const { name, description } = body;
 
-    if (!name) {
-      return Response.json(
-        {
-          message: "Please provide name and description",
-        },
-        { status: 400 }
+    if (!name || !description) {
+      return new Response(
+        JSON.stringify({ message: "Please provide name and description" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
+    // Check if category already exists
     const existingCategory = await Category.findOne({ name });
 
     if (existingCategory) {
-      return Response.json(
-        {
-          message: "Category already exists",
-        },
-        { status: 400 }
+      return new Response(
+        JSON.stringify({ message: "Category already exists" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    await Category.create({
-      name,
-      description,
-    });
+    // Create new category
+    await Category.create({ name, description });
 
-    return Response.json(
-      {
-        message: "Category created successfully",
-      },
-      { status: 201 }
+    return new Response(
+      JSON.stringify({ message: "Category created successfully" }),
+      { status: 201, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    return Response.json(
-      {
-        message: "Internal server error",
-      },
-      { status: 500 }
-    );
-    console.error("Error creating category:", error);
+    console.error("Error in POST /api/category:", error);
+
+    return new Response(JSON.stringify({ message: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 
@@ -90,4 +82,48 @@ export async function GET_Categories(req: Request) {
   }
 }
 
-export async function DELETE_Categories(req: Request) {}
+export async function PATCH_Categories(req: NextRequest, id: string) {
+  try {
+    // AUTH CHECK
+    const authResponse = await authMiddleware(req as NextRequest);
+    if (authResponse) return authResponse; // return if not authorized
+
+    // Connect to DB
+    await dbConnect();
+
+    // Get request body
+    const body = await req.json();
+    const { name, description } = body;
+
+    if (!name || !description) {
+      return Response.json(
+        { message: "Please provide name and description" },
+        { status: 400 }
+      );
+    }
+
+    const category = await Category.findByIdAndUpdate(
+      id,
+      {
+        name,
+        description,
+      },
+      { new: true }
+    );
+
+    return Response.json(
+      {
+        message: "Category edited successfully",
+        data: category,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error in POST /api/category:", error);
+
+    return new Response(JSON.stringify({ message: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}

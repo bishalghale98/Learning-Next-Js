@@ -1,25 +1,35 @@
-// store.ts
+// store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // uses localStorage by default
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import rootReducer from "./rootReducer";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["category"], // persist only the `category` slice
+  whitelist: ["category"], // slices you want to persist
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }), // disable warning for non-serializable values from redux-persist
-});
+// ✅ Create single store instance
+export const stores = () => {
+  return configureStore({
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false, // needed for redux-persist
+      }),
+  });
+};
+
+const store = stores()
 
 export const persistor = persistStore(store);
 
+// ✅ Types for use in hooks.ts
+export type AppStore = ReturnType<typeof stores>;
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
+
 export default store;

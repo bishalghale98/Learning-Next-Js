@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ICategory } from "@/store/category/types";
 import { MoreVertical, PenSquare, Trash2 } from "lucide-react";
 import React from "react";
+import Link from "next/link";
 
 const CategoryTable = ({ categories }: any) => {
-
+  const editRoute = `/admin/categories/edit/`;
 
   return (
     <table className="min-w-full divide-y divide-gray-200">
@@ -46,9 +46,9 @@ const CategoryTable = ({ categories }: any) => {
             </td>
             <td className="p-4 whitespace-nowrap">
               <div className="flex items-center gap-1">
-                <Button variant="ghost" size="icon" className="rounded-full">
+                <Link className="rounded-full" href={`${editRoute}${category._id}`}>
                   <PenSquare className="w-5 h-5 text-indigo-500" />
-                </Button>
+                </Link>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Trash2 className="w-5 h-5 text-red-600" />
                 </Button>
