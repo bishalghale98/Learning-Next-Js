@@ -127,3 +127,48 @@ export async function PATCH_Categories(req: NextRequest, id: string) {
     });
   }
 }
+
+export async function DELETE_Categories(req: NextRequest, id: string) {
+  try {
+    const authResponse = await authMiddleware(req as NextRequest);
+    if (authResponse) return authResponse; // return if not authorized
+
+    // Connect to DB
+    await dbConnect();
+
+    if (!id) {
+      return Response.json(
+        {
+          message: "Invalid id",
+        },
+        { status: 400 }
+      );
+    }
+
+    const deleted = await Category.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return Response.json(
+        {
+          message: "Something went wrong",
+        },
+        { status: 400 }
+      );
+    }
+
+    return Response.json(
+      {
+        message: "Category deleted successfully",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        message: "An unexpected error occurred. Please try again later.",
+      },
+      { status: 500 }
+    );
+  }
+}

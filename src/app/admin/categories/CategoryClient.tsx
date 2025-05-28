@@ -14,18 +14,18 @@ import { toast } from "sonner";
 
 const CategoryClient = () => {
   const dispatch = useAppDispatch();
-  const { categories, loading, error, meta, hasFetched } = useAppSelector(
+  const { categories, loading, error, successCreate, hasFetched, successRemove } = useAppSelector(
     (state) => state.category
   );
 
   // Ref to ensure getAllCategories dispatch runs only once
 
   useEffect(() => {
-    if (!hasFetched) {
+    if (!hasFetched || successRemove || successCreate) {
       dispatch(getAllCategories());
       console.log("Fetch categories");
     }
-  }, [dispatch]);
+  }, [dispatch,successRemove, successCreate]);
 
   useEffect(() => {
     if (error && error.message) {
@@ -71,7 +71,7 @@ const CategoryClient = () => {
                 {loading ? (
                   <LoadingScreen />
                 ) : categories.length > 0 ? (
-                  <CategoryTable categories={categories} />
+                  <CategoryTable />
                 ) : (
                   <div className="p-4 text-center text-gray-500">
                     No categories found.

@@ -22,6 +22,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import {
   resetErrorState,
+  resetFetchedState,
   resetSuccessState,
 } from "@/store/category/categorySlice";
 // Simple Spinner component
@@ -83,6 +84,7 @@ export default function AddCategory() {
     if (successCreate) {
       toast.success("Category Successfully Uploaded", { duration: 2000 });
       dispatch(resetSuccessState()); // Reset it so it doesn't show on refresh
+      dispatch(resetFetchedState())
     }
     if (error && error.message) {
       toast.error(error.message, { duration: 2000 });

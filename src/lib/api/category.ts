@@ -22,6 +22,6 @@ export const createCategory = async (data: ICategoryData) => {
 };
 
 export const deleteCategory = async (id: string) => {
-  const response = await api.delete("/category" + id);
+  const response = await api.delete("/category/" + id);
   return response;
 };

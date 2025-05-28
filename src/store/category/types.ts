@@ -24,5 +24,6 @@ interface ICategoryInitialState {
   meta: IMeta;
   hasFetched: boolean;
   addCategories: string | null; // to store newly added category
+  successRemove: boolean;
 }
 export type { ICategoryInitialState };

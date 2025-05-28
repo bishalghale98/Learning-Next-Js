@@ -23,6 +23,7 @@ const initialState: ICategoryInitialState = {
   },
   hasFetched: false,
   addCategories: "", // to store newly added category
+  successRemove: false,
 };
 
 const categorySlice = createSlice({
@@ -34,6 +35,9 @@ const categorySlice = createSlice({
     },
     resetSuccessState(state) {
       state.successCreate = false;
+    },
+    resetRemoveState(state) {
+      state.successRemove = false;
     },
     resetErrorState(state) {
       state.error.message = null;
@@ -78,19 +82,18 @@ const categorySlice = createSlice({
       })
       .addCase(removeCategory.fulfilled, (state, action) => {
         state.loading = false;
-
+        state.successRemove = true;
         state.meta = action.meta;
       })
       .addCase(removeCategory.rejected, (state, action) => {
         state.loading = false;
-
         state.error.message = (action.payload as { message: string })?.message;
-        state.hasFetched = false;
+        state.successRemove = false
       }); // add category
   },
 });
 
 export const categoryActions = categorySlice.actions;
-export const { resetFetchedState, resetSuccessState, resetErrorState } =
+export const { resetFetchedState, resetSuccessState, resetErrorState, resetRemoveState } =
   categoryActions;
 export default categorySlice.reducer;
