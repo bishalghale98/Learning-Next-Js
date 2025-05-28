@@ -14,8 +14,9 @@ import { toast } from "sonner";
 
 const CategoryClient = () => {
   const dispatch = useAppDispatch();
-  const { categories, loading, error, meta, hasFetched } =
-    useAppSelector((state) => state.category);
+  const { categories, loading, error, meta, hasFetched } = useAppSelector(
+    (state) => state.category
+  );
 
   // Ref to ensure getAllCategories dispatch runs only once
 
@@ -37,14 +38,6 @@ const CategoryClient = () => {
       toast.success("Categories loaded successfully!");
     }
   }, [hasFetched]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <LoadingScreen />
-      </div>
-    );
-  }
 
   const addCategoryRoute = "/admin/categories/add-category";
 
@@ -75,7 +68,9 @@ const CategoryClient = () => {
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto rounded-xl">
-                {categories.length > 0 ? (
+                {loading ? (
+                  <LoadingScreen />
+                ) : categories.length > 0 ? (
                   <CategoryTable categories={categories} />
                 ) : (
                   <div className="p-4 text-center text-gray-500">
