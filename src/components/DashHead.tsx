@@ -22,6 +22,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { signOut } from "next-auth/react";
 
 interface MenuItem {
   label: string;
@@ -160,7 +161,7 @@ const DashHead: React.FC<DashHeadProps> = ({
             <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-muted" />
             <DropdownMenuItem className="text-red-500 cursor-pointer flex items-center border-none focus:outline-none">
               <LogOut className="mr-2 pl-4 h-4 w-4" />
-              Log out
+              <button onClick={() => signOut()}>Log out</button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

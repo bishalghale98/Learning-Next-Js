@@ -3,10 +3,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionWrapper from "@/components/SessionWrapper";
-import ReduxWrapper from "@/components/ReduxWrapper";
 import ReduxPersistWrapper from "../components/ReduxPersistWrapper";
 import { Toaster } from "sonner";
 import StoreProvider from "@/components/StoreProvider";
+import NavLayout from "@/components/home/NavLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,8 +36,11 @@ export default function RootLayout({
         <StoreProvider>
           <ReduxPersistWrapper>
             <SessionWrapper>
-              <Toaster position="top-right" richColors />
-              {children}
+              <NavLayout>
+                <Toaster position="top-right" richColors />
+
+                {children}
+              </NavLayout>
             </SessionWrapper>
           </ReduxPersistWrapper>
         </StoreProvider>

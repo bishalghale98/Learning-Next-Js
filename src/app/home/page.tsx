@@ -1,4 +1,5 @@
 "use client";
+import Navbar from "@/components/home/Navbar";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
@@ -8,34 +9,40 @@ const Home = () => {
   if (session) {
     return (
       <>
-        <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-800">
-                Welcome, {session.user?.name || "User"}
-              </h1>
-              <h3 className="text-lg text-gray-600">{session.user?.email}</h3>
-            </div>
 
-            <div className="relative">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-8 mt-20">
+          <div className="flex flex-col items-center gap-6">
+            {/* Profile Picture Section */}
+            <div className="relative group">
               <Image
-                src={session.user?.image || "Profilepicture.png"}
+                src={session.user?.image || "/Profilepicture.png"}
                 alt="Profile Picture"
-                width={120}
-                height={120}
-                className="rounded-full border-4 border-indigo-100"
+                width={140}
+                height={140}
+                className="rounded-full border-4 border-indigo-200 shadow-lg"
                 priority
               />
-              <div className="absolute inset-0 rounded-full border-2 border-white opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <span className="text-xs bg-indigo-500 text-white px-2 py-1 rounded">
-                  Profile
+              <div className="absolute inset-0 rounded-full bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span className="text-xs bg-indigo-600 text-white px-3 py-1 rounded-full shadow-md">
+                  View Profile
                 </span>
               </div>
             </div>
 
+            {/* Welcome Text */}
+            <div className="text-center">
+              <h1 className="text-3xl font-semibold text-gray-800">
+                Welcome, {session.user?.name || "User"}
+              </h1>
+              <p className="text-md text-gray-500 mt-1">
+                {session.user?.email}
+              </p>
+            </div>
+
+            {/* Sign Out Button */}
             <button
               onClick={() => signOut()}
-              className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="px-8 py-2 bg-indigo-600 text-white font-medium rounded-full shadow hover:bg-indigo-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
             >
               Sign Out
             </button>
@@ -48,6 +55,7 @@ const Home = () => {
   if (session === null) {
     return (
       <>
+        <Navbar />
         <div className="h-screen w-screen bg-gray-400">
           {/* Modal Overlay */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/30">
