@@ -25,5 +25,12 @@ interface ICategoryInitialState {
   hasFetched: boolean;
   addCategories: string | null; // to store newly added category
   successRemove: boolean;
+  loadingRemove: boolean;
+  loadingUpdate: boolean;
+  successUpdate: boolean;
+  updatedCategory: ICategory | null;
+  successSingle: boolean;
+  loadingSingle: boolean;
+  singleCategory: ICategory | null;
 }
 export type { ICategoryInitialState };

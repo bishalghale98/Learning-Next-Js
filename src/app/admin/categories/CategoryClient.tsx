@@ -8,24 +8,31 @@ import { getAllCategories } from "@/store/category/categoryAction";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Search } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import CategoryTable from "./CategoryTable";
 import { toast } from "sonner";
+import { any } from "zod";
+import { resetSingleCategory } from "@/store/category/categorySlice";
 
 const CategoryClient = () => {
   const dispatch = useAppDispatch();
-  const { categories, loading, error, successCreate, hasFetched, successRemove } = useAppSelector(
-    (state) => state.category
-  );
+  const {
+    categories,
+    loading,
+    error,
+    successCreate,
+    hasFetched,
+    successRemove,
+  } = useAppSelector((state) => state.category);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Ref to ensure getAllCategories dispatch runs only once
 
   useEffect(() => {
-    if (!hasFetched || successRemove || successCreate) {
+    if (!hasFetched || successRemove) {
       dispatch(getAllCategories());
-      console.log("Fetch categories");
     }
-  }, [dispatch,successRemove, successCreate]);
+  }, [dispatch, successRemove, !hasFetched]);
 
   useEffect(() => {
     if (error && error.message) {
@@ -38,6 +45,16 @@ const CategoryClient = () => {
       toast.success("Categories loaded successfully!");
     }
   }, [hasFetched]);
+
+  let filterCategories;
+
+  if (hasFetched) {
+    filterCategories = categories.filter(
+      (category) =>
+        category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        category._id.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
 
   const addCategoryRoute = "/admin/categories/add-category";
 
@@ -55,6 +72,7 @@ const CategoryClient = () => {
                 type="text"
                 className="block w-full h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-white border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Search for category"
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <Link href={addCategoryRoute}>
@@ -71,7 +89,7 @@ const CategoryClient = () => {
                 {loading ? (
                   <LoadingScreen />
                 ) : categories.length > 0 ? (
-                  <CategoryTable />
+                  <CategoryTable filterCategories={filterCategories} />
                 ) : (
                   <div className="p-4 text-center text-gray-500">
                     No categories found.

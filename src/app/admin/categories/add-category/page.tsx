@@ -25,29 +25,8 @@ import {
   resetFetchedState,
   resetSuccessState,
 } from "@/store/category/categorySlice";
+import { Spinner } from "@/components/Spinner";
 // Simple Spinner component
-const Spinner = () => (
-  <svg
-    className="animate-spin h-5 w-5 text-white ml-2"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-  >
-    <circle
-      className="opacity-25"
-      cx="12"
-      cy="12"
-      r="10"
-      stroke="currentColor"
-      strokeWidth="4"
-    ></circle>
-    <path
-      className="opacity-75"
-      fill="currentColor"
-      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-    ></path>
-  </svg>
-);
 
 // Define the form schema using Zod for validation
 
@@ -81,16 +60,23 @@ export default function AddCategory() {
   }
 
   useEffect(() => {
+    return () => {
+      dispatch(resetSuccessState());
+      dispatch(resetErrorState());
+    };
+  }, []);
+
+  useEffect(() => {
     if (successCreate) {
       toast.success("Category Successfully Uploaded", { duration: 2000 });
-      dispatch(resetSuccessState()); // Reset it so it doesn't show on refresh
-      dispatch(resetFetchedState())
+      dispatch(resetFetchedState());
+      redirect(back);
     }
     if (error && error.message) {
       toast.error(error.message, { duration: 2000 });
       dispatch(resetErrorState());
     }
-  }, [successCreate, dispatch, error]);
+  }, [successCreate, error]);
 
   const back = "/admin/categories";
 
@@ -215,7 +201,8 @@ export default function AddCategory() {
                     type="submit"
                     className="flex-1 sm:flex-none h-12 px-8 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors shadow-lg"
                   >
-                    {loading ? <Spinner /> : <Plus className="h-4 w-4"/>} {loading ? "Uploading": "Create Category"}
+                    {loading ? <Spinner /> : <Plus className="h-4 w-4" />}{" "}
+                    {loading ? "Uploading" : "Create Category"}
                   </Button>
                 </div>
               </CardContent>

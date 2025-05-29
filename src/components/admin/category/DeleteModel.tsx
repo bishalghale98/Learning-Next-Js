@@ -11,6 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { string } from "zod";
+import { Spinner } from "@/components/Spinner";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -22,6 +24,7 @@ interface ConfirmationModalProps {
   confirmButtonText?: string;
   cancelButtonText?: string;
   variant?: "destructive" | "default";
+  loading?: boolean;
 }
 
 const DeleteModel = ({
@@ -34,6 +37,7 @@ const DeleteModel = ({
   confirmButtonText = "Confirm",
   cancelButtonText = "Cancel",
   variant = "destructive",
+  loading = false || true,
 }: ConfirmationModalProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -47,13 +51,16 @@ const DeleteModel = ({
   };
 
   const handleConfirm = () => {
-    onConfirm(deleteId); // ✅ use the correct ID
+    onConfirm(deleteId);
     handleClose();
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[425px]" onInteractOutside={handleClose}>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={handleClose}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{message}</DialogDescription>
@@ -63,7 +70,7 @@ const DeleteModel = ({
             {cancelButtonText}
           </Button>
           <Button variant={variant} onClick={handleConfirm}>
-            {confirmButtonText}
+            {confirmButtonText} {loading ? <Spinner /> : null}
           </Button>
         </DialogFooter>
         <button

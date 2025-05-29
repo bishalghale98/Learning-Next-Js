@@ -82,6 +82,38 @@ export async function GET_Categories(req: Request) {
   }
 }
 
+export async function GET_Category(req: NextRequest, id: any) {
+  try {
+    await dbConnect();
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return Response.json(
+        {
+          message: "No categories found",
+        },
+        { status: 404 }
+      );
+    }
+    return Response.json(
+      {
+        message: "Categories fetched successfully",
+        data: category,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return Response.json(
+      {
+        message: "Internal server error",
+      },
+      { status: 500 }
+    );
+    console.error("Error fetching categories:", error);
+  }
+}
+
 export async function PATCH_Categories(req: NextRequest, id: string) {
   try {
     // AUTH CHECK

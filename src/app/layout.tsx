@@ -7,6 +7,8 @@ import ReduxPersistWrapper from "../components/ReduxPersistWrapper";
 import { Toaster } from "sonner";
 import StoreProvider from "@/components/StoreProvider";
 import NavLayout from "@/components/home/NavLayout";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +40,7 @@ export default function RootLayout({
             <SessionWrapper>
               <NavLayout>
                 <Toaster position="top-right" richColors />
-
+                <ToastContainer position="top-right" autoClose={3000} />
                 {children}
               </NavLayout>
             </SessionWrapper>
